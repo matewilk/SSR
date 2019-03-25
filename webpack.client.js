@@ -4,7 +4,10 @@ const baseConfig = require('./webpack.base');
 
 const config = {
 	// Tell webpack the root file of our client app
-	entry: './src/client/client.js',
+	entry: [
+		'babel-polyfill',
+		'./src/client/client.js'
+		],
 
 	// Tell webpack where to put the output file
 	output: {

@@ -8,7 +8,10 @@ const config = {
 	target: 'node',
 
 	// Tell webpack the root file of our server app
-	entry: './src/index.js',
+	entry: [
+		'babel-polyfill',
+		'./src/index.js'
+	],
 
 	// Tell webpack where to put the output file
 	output: {
