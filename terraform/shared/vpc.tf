@@ -17,21 +17,39 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = "${aws_vpc.vpc.id}"
 
   tags {
-    Name = "ecsIG"
+    Name = "ecsIGW"
     Environment = "${var.environment_tag}"
   }
 }
 
 # Public Subnet
 resource "aws_subnet" "pub_subnet" {
-  cidr_block = "${var.cidr_subnet}"
+  count = "${length(var.availability_zones)}"
+
+  cidr_block = "10.1.${(count.index + 1) * 10}.0/24"
   vpc_id = "${aws_vpc.vpc.id}"
 
   map_public_ip_on_launch = "true"
-  availability_zone = "${var.availability_zone}"
+  availability_zone = "${element(var.availability_zones, count.index)}"
 
   tags {
-    Name = "ecsPubSubnet"
+    Name = "ecsPubSubnet-${element(var.availability_zones, count.index)}"
+    Environment = "${var.environment_tag}"
+  }
+}
+
+# Private Subnet
+resource "aws_subnet" "priv_subnet" {
+  count = "${length(var.availability_zones)}"
+
+  cidr_block = "10.1.${(count.index + 1) * 11}.0/24"
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  map_public_ip_on_launch = true
+  availability_zone = "${element(var.availability_zones, count.index)}"
+
+  tags {
+    Name = "ecsPrivSubnet-${element(var.availability_zones, count.index)}"
     Environment = "${var.environment_tag}"
   }
 }
@@ -53,12 +71,12 @@ resource "aws_route_table" "pub_subnet_routing_table" {
 # Associate the routing table with subnet (to make it public)
 resource "aws_route_table_association" "pub_subnet_route_table_assoc" {
   route_table_id = "${aws_route_table.pub_subnet_routing_table.id}"
-  subnet_id = "${aws_subnet.pub_subnet.id}"
+  subnet_id = "${element(aws_subnet.pub_subnet.*.id, count.index)}"
 }
 
-# ECS instance Security Group
-resource "aws_security_group" "ecs_sec_group" {
-  name = "ecs_sec_group"
+# VPC Security Group for instance
+resource "aws_security_group" "vpc_sec_group" {
+  name = "vpc_sec_group"
   description = "public access security group"
 
   vpc_id = "${aws_vpc.vpc.id}"

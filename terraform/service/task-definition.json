@@ -1,0 +1,36 @@
+[
+  {
+    "name": "ssr_web",
+    "memory": 128,
+    "cpu": 128,
+    "portMappings": [
+      {
+        "hostPort": 5000,
+        "containerPort": 5000,
+        "protocol": "tcp"
+      }
+    ],
+    "image": "970391478493.dkr.ecr.eu-west-2.amazonaws.com/ssr_web:latest",
+    "volumesFrom": [],
+    "extraHosts": null,
+    "dnsServers": null,
+    "disableNetworking": null,
+    "dnsSearchDomains": null,
+    "hostname": null,
+    "essential": true,
+    "entryPoint": [],
+    "mountPoints": [],
+    "ulimits": null,
+    "dockerSecurityOptions": null,
+    "environment": null,
+    "links": [],
+    "workingDirectory": null,
+    "readonlyRootFilesystem": null,
+    "command": [],
+    "user": null,
+    "dockerLabels": null,
+    "logConfiguration": null,
+    "privileged": null,
+    "memoryReservation": null
+  }
+]
