@@ -5,5 +5,5 @@ public
 .idea
 .DS_Store
 
-terraform/.terraform/*
+terraform/**/.terraform/*
 *tfstate*
